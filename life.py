@@ -16,6 +16,7 @@ class Square():
 
 	def checkArea(self, matrix):
 		count = 0
+		#going to make this part a bit more efficient lol
 		try:
 			#top left
 			count = count+1 if matrix[self.y-1][self.x-1].state == 1 else count
