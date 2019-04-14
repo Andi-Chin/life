@@ -1,12 +1,13 @@
 import pygame
 import sys
 import time
+import copy
 
-gridSize = 50
+gridSize = 10
 pygame.init()
 pygame.font.init()
 myfont = pygame.font.SysFont('Comic Sans MS', round(gridSize/2))
-screen = pygame.display.set_mode([2000, 1500])
+screen = pygame.display.set_mode([1200, 800])
 pygame.display.set_caption("Conway's Game of Life")
 class Square():
 	def __init__(self, x, y, state):
@@ -16,46 +17,38 @@ class Square():
 
 	def checkArea(self, matrix):
 		count = 0
-		#going to make this part a bit more efficient lol
-		try:
-			#top left
-			count = count+1 if matrix[self.y-1][self.x-1].state == 1 else count
-		except:
-			pass
-		try:
-			#top
-			count = count+1 if matrix[self.x][self.y-1].state == 1 else count
-		except: pass
-		try:
-			#top right
-			count = count+1 if matrix[self.x+1][self.y-1].state == 1 else count
-		except: pass
-		try:
-			#left
-			count = count+1 if matrix[self.x-1][self.y].state == 1 else count
-		except: pass
-		try:
-			#right
-			count = count+1 if matrix[self.x+1][self.y].state == 1 else count
-		except: pass
-		try:
-			#down left
-			count = count+1 if matrix[self.x-1][self.y+1].state == 1 else count
-		except: pass
-		try:
-			#down
-			count = count+1 if matrix[self.x][self.y+1].state == 1 else count
-		except: pass
-		try:
-			#down right
-			count = count+1 if matrix[self.x+1][self.y+1].state == 1 else count
-		except: pass
+		for y in range(self.y - 1, self.y + 2):
+			for x in range(self.x - 1, self.x + 2):
+				#if it's urself
+				if x == self.x and y == self.y: continue	
+				#so it doesn't go out of bounds
+				if x < 0 or y < 0: continue		
+				try:	
+					if matrix[y][x].state == 1:
+						count += 1
+				except IndexError:
+					pass
 		return count
+
+
 
 
 class Matrix():
 
-	matrix = [[Square(x, y, 0) for x in range(50)] for y in range(50)]
+	matrix = [[Square(x, y, 0) for x in range(150)] for y in range(70)]
+	# lis = [[1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+	# 		[1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+	# 		[1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+	# 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+	# 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+	# 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+	# 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+	# 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+	# 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+	# 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+	# for y in range(len(lis)):
+	# 	for x in range(len(lis)):
+	# 		matrix[y][x].state = lis[y][x]
 
 
 	def drawMatrix():
@@ -71,7 +64,7 @@ class Matrix():
 		Matrix.matrix[y][x].state = state
 
 	def generation():
-		tempMatrix = Matrix.matrix
+		tempMatrix = copy.deepcopy(Matrix.matrix)
 		for y in range(len(Matrix.matrix)):
 			for x in range(len(Matrix.matrix)):
 				count = Matrix.matrix[y][x].checkArea(Matrix.matrix)
@@ -120,7 +113,6 @@ while not done:
 
 
 
-
 iteration = 0
 while True:
 	Matrix.drawRects()
@@ -130,6 +122,8 @@ while True:
 	print("gen: %s" % (iteration))
 
 	iteration += 1
+
+
 
 	time.sleep(0.5)
 
