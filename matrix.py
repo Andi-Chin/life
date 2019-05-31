@@ -23,12 +23,7 @@ class Matrix():
 		for y in range(len(Matrix.matrix)):
 			for x in range(len(Matrix.matrix)):
 				count = Matrix.matrix[y][x].checkArea(Matrix.matrix)
-				if count < 2:
-					tempMatrix[y][x].state = 0
-				if count == 3:
-					tempMatrix[y][x].state = 1
-				if count > 3:
-					tempMatrix[y][x].state = 0
+				#logic, see rules on https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 		Matrix.matrix = tempMatrix
 	def drawRects(screen: pygame.Surface):
 		color = None
